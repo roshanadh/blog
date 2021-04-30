@@ -7,6 +7,6 @@
 </head>
 <body>
     <p th:if="${error}">Sorry, the post you requested doesn't exist!</p>
-    <p th:unless="${error}" th:text="${post.content}"></p>
+    <p th:unless="${error}" th:utext="${post.content}"></p>
 </body>
 </html>
