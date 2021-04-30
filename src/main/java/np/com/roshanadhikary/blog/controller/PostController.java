@@ -19,24 +19,23 @@ public class PostController {
 		this.postRepository = postRepository;
 	}
 
-	@GetMapping("/")
+	@GetMapping("")
 	public String getAllPosts(Model model) {
-		model.addAttribute("posts", postRepository.findAll());
+		List<Post> posts = (List<Post>) postRepository.findAll();
+
+		model.addAttribute("posts", posts);
 		return "posts";
 	}
 
 	@GetMapping("/{id}")
 	public String getPostById(@PathVariable long id, Model model) {
-		System.out.println("REQUEST GET /posts/{id}");
 		Optional<Post> postOptional = postRepository.findById(id);
+
 		if (postOptional.isPresent()) {
 			model.addAttribute("post", postOptional.get());
-			System.out.println("TITLE IS: " + postOptional.get().getTitle());
 		} else {
 			model.addAttribute("error", "no-post");
 		}
 		return "post";
-
-
 	}
 }
