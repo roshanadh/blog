@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:if="${error}"> Error | Roshan Adhikari </title>
+    <title th:unless="${error}" th:text="${post.title + ' | Roshan Adhikari'}"> | Roshan Adhikari </title>
+</head>
+<body>
+    <p th:if="${error}">Sorry, the post you requested doesn't exist!</p>
+    <p th:unless="${error}" th:text="${post.content}"></p>
+</body>
+</html>
