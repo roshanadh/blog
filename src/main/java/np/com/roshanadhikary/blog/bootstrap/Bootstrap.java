@@ -45,9 +45,21 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 			helloWorldPost.setTitle("Hello World!");
 			helloWorldPost.setAuthor(bootstrapAuthor());
 			helloWorldPost.setContent(helloWorldPostContent);
+			helloWorldPost.setSynopsis(helloWorldPostContent);
 			helloWorldPost.setDateTime(LocalDateTime.now());
 
+			Post introPost = new Post();
+			String introPostContent = """
+			**This is my second post in this blog!**
+			""";
+			introPost.setTitle("Intro to my blog!");
+			introPost.setAuthor(bootstrapAuthor());
+			introPost.setContent(introPostContent);
+			introPost.setSynopsis(introPostContent);
+			introPost.setDateTime(LocalDateTime.now());
+
 			postRepository.save(helloWorldPost);
+			postRepository.save(introPost);
 		}
 	}
 }
