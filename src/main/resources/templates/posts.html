@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Posts | Roshan Adhikari</title>
+</head>
+<body>
+    <h2>All posts</h2>
+    <div th:each="post : ${posts}">
+        <strong  th:utext="${post.title}"></strong>
+        <p th:utext="${post.synopsis} + '...'"></p>
+    </div>
+</body>
+</html>
