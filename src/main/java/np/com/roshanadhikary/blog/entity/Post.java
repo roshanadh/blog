@@ -2,9 +2,11 @@ package np.com.roshanadhikary.blog.entity;
 
 import lombok.*;
 import np.com.roshanadhikary.blog.util.*;
+import org.jsoup.*;
 
 import javax.persistence.*;
 import java.time.*;
+import java.util.*;
 
 @Data
 @Entity
@@ -32,15 +34,16 @@ public class Post {
 	@Convert(converter = LocalDateTimeConverter.class)
 	private LocalDateTime dateTime;
 
-	public void setContent(String markdownContent) {
+	public void setContent(List<String> markdownLines) {
 		MdToHtmlRenderer renderer = new MdToHtmlRenderer();
 
-		this.content = renderer.render(markdownContent);
+		this.content = renderer.render(markdownLines);
 	}
 
-	public void setSynopsis(String markdownContent) {
+	public void setSynopsis(List<String> markdownLines) {
 		MdToHtmlRenderer renderer = new MdToHtmlRenderer();
-		String content = renderer.render(markdownContent);
+		String renderedHtml = renderer.render(markdownLines);
+		String content = Jsoup.parse(renderedHtml).text();
 
 		this.synopsis = content.length() <= 150 ? content : content.substring(0, 149);
 	}

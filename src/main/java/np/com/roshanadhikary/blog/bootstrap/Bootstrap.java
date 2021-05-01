@@ -5,8 +5,12 @@ import np.com.roshanadhikary.blog.repository.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
 import org.springframework.context.event.*;
+import org.springframework.core.io.*;
 import org.springframework.stereotype.*;
 
+import java.io.*;
+import java.nio.charset.*;
+import java.nio.file.*;
 import java.time.*;
 import java.util.*;
 
@@ -14,8 +18,12 @@ import java.util.*;
 public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 	@Autowired
 	private AuthorRepository authorRepository;
+
 	@Autowired
 	private PostRepository postRepository;
+
+	@Value("classpath:posts/*")
+	private Resource[] postFiles;
 
 	public Author bootstrapAuthor() {
 		Optional<Author> authorOptional = authorRepository.findById(1L);
@@ -32,34 +40,60 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 		}
 	}
 
+	public List<String> readMarkdownFileLines(String filename) {
+		try {
+			File file = new ClassPathResource("/posts/" + filename)
+					.getFile();
+
+			return Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public String getTitleFromFileName(String filename) {
+		String fileNameBeforeExtension = filename.split(".md")[0];
+		String[] tokens = fileNameBeforeExtension.split("_");
+
+		String[] titleTokens = Arrays.copyOfRange(tokens, 1, tokens.length);
+		return String.join(" ", titleTokens);
+	}
+
+	public long getIdFromFileName(String filename) {
+		String fileNameBeforeExtension = filename.split(".md")[0];
+		return Long.parseLong(fileNameBeforeExtension.split("_")[0]);
+	}
+
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
 		System.out.println("Bootstrapping posts...");
 
-		Optional<Post> postOptional = postRepository.findById(1L);
-		if (postOptional.isEmpty()) {
-			Post helloWorldPost = new Post();
-			String helloWorldPostContent = """
-			Hello World! *This is my first post*!
-			""";
-			helloWorldPost.setTitle("Hello World!");
-			helloWorldPost.setAuthor(bootstrapAuthor());
-			helloWorldPost.setContent(helloWorldPostContent);
-			helloWorldPost.setSynopsis(helloWorldPostContent);
-			helloWorldPost.setDateTime(LocalDateTime.now());
+		Arrays.stream(postFiles).forEach(postFile -> {
+			Optional<String> postFileNameOptional = Optional.ofNullable(postFile.getFilename());
+			Post post = new Post();
 
-			Post introPost = new Post();
-			String introPostContent = """
-			**This is my second post in this blog!**
-			""";
-			introPost.setTitle("Intro to my blog!");
-			introPost.setAuthor(bootstrapAuthor());
-			introPost.setContent(introPostContent);
-			introPost.setSynopsis(introPostContent);
-			introPost.setDateTime(LocalDateTime.now());
+			if (postFileNameOptional.isPresent()) {
+				String postFileName = postFileNameOptional.get();
+				String title = getTitleFromFileName(postFileName);
+				List<String> lines = readMarkdownFileLines(postFileName);
+				Author author = bootstrapAuthor();
 
-			postRepository.save(helloWorldPost);
-			postRepository.save(introPost);
-		}
+				long id = getIdFromFileName(postFileName);
+
+				Optional<Post> postOptional = postRepository.findById(id);
+				if (postOptional.isEmpty()) {
+					post.setTitle(title);
+					post.setAuthor(author);
+					post.setContent(lines);
+					post.setSynopsis(lines);
+					post.setDateTime(LocalDateTime.now());
+
+					postRepository.save(post);
+				}
+			} else {
+				System.out.println("postFileName is null, should not be null");
+			}
+		});
 	}
 }
