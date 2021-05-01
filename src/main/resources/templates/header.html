@@ -8,16 +8,45 @@
           crossorigin="anonymous"
           th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}"
     >
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Laila:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300&display=swap" rel="stylesheet">
+    <style>
+        header {
+            margin: 2vh 8vw;
+            text-align:center;
+        }
+        a, .btn {
+            color: #E91E63 !important;
+        }
+        .title {
+            font-family: 'Laila', sans-serif;
+            font-size: calc(18px + 4vw);
+            text-decoration: none;
+        }
+        .subtitle {
+            font-size: calc(5px + 1vw);
+            font-family: 'Roboto', sans-serif;
+            color: #e8e8e8 !important;
+        }
+        a:hover {
+            color: #f1828d;
+        }
+
+    </style>
 </head>
-<body>
-    <header class="jumbotron" th:fragment="header">
-        <h2 >Welcome to my  personal blog.</h2>
-        <hr class="my-4">
+<body class="bg-dark">
+    <header class="container" th:fragment="header">
+		<span class="title"><a href="/posts" class="card-link">Pustika</a></span>
+
+        <p class="subtitle">Personal blog by <a href="https://roshanadhikari.name.np" target="_blank" class="card-link">Roshan</a> </p>
         <p class="lead">
-            <a class="btn btn-link" href="#" role="button">GitHub</a>
-            <a class="btn btn-link" href="#" role="button">Portfolio</a>
-            <a class="btn btn-link" href="#" role="button">LinkedIn</a>
+            <a class="card-link" href="https://www.github.com/roshanadh" target="_blank" role="button">GitHub</a>
+            <a class="card-link" href="https://roshanadhikari.name.np" target="_blank" role="button">Portfolio</a>
+            <a class="card-link" href="https://www.linkedin.com/in/roshanadh/" target="_blank" role="button">LinkedIn</a>
         </p>
+        <hr class="my-4">
+
     </header>
 </body>
 </html>
