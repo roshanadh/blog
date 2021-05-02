@@ -26,6 +26,18 @@
         .text-gray {
             color: #abb7b7;
         }
+        .pagination > .page-item > a {
+            background-color: #343a40 !important
+        }
+        .pagination > .active > a {
+            background-color: #E91E63 !important;
+            color: #e8e8e8 !important;
+            border: 1px solid #dee2e6 !important;
+        }
+        .page-link:focus, .page-link:hover {
+            z-index: 0 !important;
+            box-shadow: 0 0 0 0.2rem rgb(255 255 255 / 8%) !important;
+        }
     </style>
 </head>
 <body>
@@ -42,6 +54,31 @@
                 </div>
             </div>
         </div>
+
+        <nav aria-label="Navigation" class="bg-dark">
+            <ul class="pagination justify-content-center">
+                <li th:if="${pageRequested == 0}" class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                </li>
+                <li th:unless="${pageRequested == 0}" class="page-item">
+                    <a class="page-link" th:href="${'/posts?page=' + (pageRequested - 1) + '&size=' + paginationSize}"  href="#" tabindex="-1">Previous</a>
+                </li>
+                <th:block th:each="i : ${#numbers.sequence(0, numOfPages - 1)}">
+                    <li th:if="${pageRequested == i}" class="page-item active">
+                        <a class="page-link" th:href="${'/posts?page=' + i + '&size=' + paginationSize}" href="/posts" th:text="${i + 1}">1</a>
+                    </li>
+                    <li th:unless="${pageRequested == i}" class="page-item">
+                        <a class="page-link" th:href="${'/posts?page=' + i + '&size=' + paginationSize}" href="/posts" th:text="${i + 1}">1</a>
+                    </li>
+                </th:block>
+                <li th:if="${pageRequested == numOfPages - 1}" class="page-item disabled">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+                <li th:unless="${pageRequested == numOfPages - 1}" class="page-item">
+                    <a class="page-link" th:href="${'/posts?page=' + (pageRequested + 1) + '&size=' + paginationSize}" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </body>
 </html>
