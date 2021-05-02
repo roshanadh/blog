@@ -42,10 +42,16 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
 	public List<String> readMarkdownFileLines(String filename) {
 		try {
-			File file = new ClassPathResource("/posts/" + filename)
-					.getFile();
-
-			return Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+			InputStream iStream = new ClassPathResource("/posts/" + filename)
+					.getInputStream();
+			BufferedReader bReader = new BufferedReader(new InputStreamReader(iStream));
+			List<String> allLines = new ArrayList<>();
+			String line = bReader.readLine();
+			while (line != null) {
+				allLines.add(line);
+				line = bReader.readLine();
+			}
+			return allLines;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
