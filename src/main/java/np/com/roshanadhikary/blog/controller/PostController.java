@@ -22,7 +22,7 @@ public class PostController {
 	@GetMapping("")
 	public String getAllPosts(Model model) {
 		List<Post> posts = (List<Post>) postRepository.findAll();
-
+		Collections.reverse(posts);
 		model.addAttribute("posts", posts);
 		return "posts";
 	}
