@@ -20,7 +20,7 @@ public class Post {
 	@Column
 	private String title;
 
-	@Column(length = 50000)
+	@Column(columnDefinition = "TEXT", length = 50000)
 	private String content;
 
 	@Column(length = 150)
