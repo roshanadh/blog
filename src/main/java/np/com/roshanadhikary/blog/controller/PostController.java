@@ -22,12 +22,11 @@ public class PostController {
 	}
 
 	@GetMapping("")
-	public String getAllPosts() {
-		return "redirect:/posts?page=0&size=" + PAGINATIONSIZE;
-	}
+	public String getPaginatedPosts(
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value="size", defaultValue = "" + PAGINATIONSIZE) int size,
+			Model model) {
 
-	@GetMapping(params = {"page", "size"})
-	public String getPaginatedPosts(@RequestParam int page, @RequestParam int size, Model model) {
 		Pageable pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
 		Page<Post> postsPage = postRepository.findAll(pageRequest);
 		List<Post> posts = postsPage.toList();
