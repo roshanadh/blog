@@ -89,6 +89,7 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
 				Optional<Post> postOptional = postRepository.findById(id);
 				if (postOptional.isEmpty()) {
+					System.out.println("Post with ID: " + id + " does not exist. Creating post...");
 					post.setTitle(title);
 					post.setAuthor(author);
 					post.setContent(lines);
@@ -96,6 +97,9 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 					post.setDateTime(LocalDateTime.now());
 
 					postRepository.save(post);
+					System.out.println("Post with ID: " + id + " created.");
+				} else {
+					System.out.println("Post with ID: " + id + " exists.");
 				}
 			} else {
 				System.out.println("postFileName is null, should not be null");
